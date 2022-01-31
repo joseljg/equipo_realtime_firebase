@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "885688949435",
+    "project_id": "equipo-firebase",
+    "storage_bucket": "equipo-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885688949435:android:438541c192e7f79342679e",
+        "android_client_info": {
+          "package_name": "es.joseljg.equiporealtimefirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885688949435-r9f3lrecocepa0g1bh233hriosqt0dnb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCbtF3supTcG1uyjnew_O-wXaNqQRYZBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885688949435-r9f3lrecocepa0g1bh233hriosqt0dnb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
