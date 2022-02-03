@@ -1,9 +1,14 @@
 package es.joseljg.equiporealtimefirebase.clases;
 
+import static es.joseljg.equiporealtimefirebase.utilidades.ImagenesBlobBitmap.decodeSampledBitmapFrombyteArray;
+
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.joseljg.equiporealtimefirebase.AddViajeActivity;
 import es.joseljg.equiporealtimefirebase.R;
+import es.joseljg.equiporealtimefirebase.utilidades.ImagenesFirebase;
 
 
 public class ListaViajesAdapter extends RecyclerView.Adapter<ViajeViewHolder>{
@@ -72,7 +79,26 @@ public class ListaViajesAdapter extends RecyclerView.Adapter<ViajeViewHolder>{
             holder.txt_rv_viaje_origen.setText(String.valueOf("origen: " + viaje_actual.getOrigen()));
             holder.txt_rv_viaje_destino.setText(String.valueOf("destino: " + viaje_actual.getDestino()));
             if (viaje_actual.getFoto() != null) {
-                holder.img_rv_viaje_foto.setImageBitmap(viaje_actual.getFoto());
+               new ImagenesFirebase().descargarFoto(new ImagenesFirebase.FotoStatus() {
+                    @Override
+                    public void FotoIsDownload(byte[] bytes) {
+                        if(bytes != null) {
+                            Log.i("firebasedb","foto descargada correctamente");
+                            Bitmap fotob = decodeSampledBitmapFrombyteArray(bytes, Configuracion.ALTO_IMAGENES_BITMAP, Configuracion.ANCHO_IMAGENES_BITMAP);
+                            holder.img_rv_viaje_foto.setImageBitmap(fotob);
+                        }
+                        else{
+                           Log.i("firebasedb","foto no descargada correctamente");
+                        }
+                    }
+                    @Override
+                    public void FotoIsUpload() {
+                    }
+                   @Override
+                   public void FotoIsDelete() {
+                   }
+                },viaje_actual.getFoto());
+
             }
             else{
                // holder.img_rv_viaje_foto.setImageResource(R.drawable.foto_viaje);

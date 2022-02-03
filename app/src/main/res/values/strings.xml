@@ -11,4 +11,9 @@
     <string name="mostrar_viajes">Mostrar Viajes</string>
     <string name="identificador_viaje">identificador viaje</string>
     <string name="foto_estudiante">foto estudiante</string>
+    <string name="email">Email</string>
+    <string name="clave">Clave</string>
+    <string name="loguearse">loguearse</string>
+    <string name="registrarse">registrarse</string>
+    <string name="salir">salir</string>
 </resources>

@@ -1,18 +1,33 @@
 package es.joseljg.equiporealtimefirebase;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +35,7 @@ import java.util.Map;
 
 import es.joseljg.equiporealtimefirebase.clases.Viaje;
 import es.joseljg.equiporealtimefirebase.controladores.ViajeFirebaseController;
+import es.joseljg.equiporealtimefirebase.utilidades.ImagenesFirebase;
 
 public class AddViajeActivity extends AppCompatActivity {
 
@@ -28,10 +44,29 @@ public class AddViajeActivity extends AppCompatActivity {
     EditText edt_add_destino;
     EditText edt_add_precio;
     ImageView img_add_foto;
+    private FirebaseAuth mAuth;
 
     Viaje v;
     public static final int NUEVA_IMAGEN = 1;
     Uri imagen_seleccionada = null;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            currentUser.reload();
+        }
+        else{
+            Toast.makeText(AddViajeActivity.this, "debes autenticarte primero", Toast.LENGTH_SHORT).show();
+            FirebaseUser user = mAuth.getCurrentUser();
+            //updateUI(user);
+            Intent intent = new Intent(AddViajeActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +77,8 @@ public class AddViajeActivity extends AppCompatActivity {
         edt_add_destino = (EditText) findViewById(R.id.edt_add_destino);
         edt_add_precio = (EditText) findViewById(R.id.edt_add_precio);
         img_add_foto = (ImageView) findViewById(R.id.img_add_foto);
+        mAuth = FirebaseAuth.getInstance();
+       // mAuth = FirebaseAuth.getInstance();
     }
 
     public void insertar_viaje(View view) {
@@ -52,13 +89,24 @@ public class AddViajeActivity extends AppCompatActivity {
 
         if(imagen_seleccionada != null)
         {
-            //----------- convierto el imageView a Bitmap
-            img_add_foto.buildDrawingCache();
-            Bitmap bm_foto = img_add_foto.getDrawingCache();
-            v = new Viaje(origen, destino, precio, bm_foto);
+            String email =  mAuth.getCurrentUser().getEmail();
+            new ImagenesFirebase().subirFoto(new ImagenesFirebase.FotoStatus() {
+                @Override
+                public void FotoIsDownload(byte[] bytes) {
+                }
+                @Override
+                public void FotoIsDelete() {
+                }
+                @Override
+                public void FotoIsUpload() {
+                    Toast.makeText(AddViajeActivity.this,"foto subida correcta",Toast.LENGTH_LONG).show();
+                }
+            },email, idviaje, img_add_foto);
+
+            v = new Viaje(idviaje,origen, destino, precio,email+"/"+String.valueOf(idviaje)+".png");
         }
         else{
-            v = new Viaje(idviaje,origen, destino, precio);
+            v = new Viaje(idviaje,origen, destino, precio,null);
         }
         new ViajeFirebaseController().insertarViaje(new ViajeFirebaseController.ViajeStatus() {
             @Override

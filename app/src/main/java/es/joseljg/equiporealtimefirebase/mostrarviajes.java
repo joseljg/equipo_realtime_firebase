@@ -8,6 +8,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +26,36 @@ public class mostrarviajes extends AppCompatActivity {
     private ListaViajesAdapter mAdapter;
     private ArrayList<Viaje> viajes;
     private ArrayList<String> keys;
+    private FirebaseAuth mAuth;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            currentUser.reload();
+        }
+        else{
+            Toast.makeText(mostrarviajes.this, "debes autenticarte primero", Toast.LENGTH_SHORT).show();
+            FirebaseUser user = mAuth.getCurrentUser();
+            //updateUI(user);
+            Intent intent = new Intent(mostrarviajes.this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    public void salir(View view) {
+        Intent intent = new Intent(mostrarviajes.this, MainActivity.class);
+        startActivity(intent);
+        FirebaseAuth.getInstance().signOut();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrarviajes);
+        mAuth = FirebaseAuth.getInstance();
         rv_viajes = findViewById(R.id.rv_viajes);
         mAdapter = new ListaViajesAdapter(this);
         new ViajeFirebaseController().obtener_viajes(new ViajeFirebaseController.ViajeStatus() {

@@ -4,32 +4,38 @@ import static es.joseljg.equiporealtimefirebase.clases.ViajeViewHolder.EXTRA_OBJ
 import static es.joseljg.equiporealtimefirebase.clases.ViajeViewHolder.EXTRA_OBJETO_VIAJE;
 import static es.joseljg.equiporealtimefirebase.clases.ViajeViewHolder.EXTRA_OBJETO_VIAJE_KEY;
 import static es.joseljg.equiporealtimefirebase.utilidades.ImagenesBlobBitmap.bytes_to_bitmap;
+import static es.joseljg.equiporealtimefirebase.utilidades.ImagenesBlobBitmap.decodeSampledBitmapFrombyteArray;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 import es.joseljg.equiporealtimefirebase.clases.Configuracion;
 import es.joseljg.equiporealtimefirebase.clases.Viaje;
 import es.joseljg.equiporealtimefirebase.controladores.ViajeFirebaseController;
+import es.joseljg.equiporealtimefirebase.utilidades.ImagenesFirebase;
 
 public class MostrarDetallesViajeActivity extends AppCompatActivity {
 
-    EditText edt_detalles_idviaje;
-    EditText edt_detalles_origen;
-    EditText edt_detalles_destino;
-    EditText edt_detalles_precio;
-    ImageView img_detalles_foto;
-    String key;
+    private EditText edt_detalles_idviaje;
+    private EditText edt_detalles_origen;
+    private EditText edt_detalles_destino;
+    private EditText edt_detalles_precio;
+    private ImageView img_detalles_foto;
+    private String key;
+    private Viaje v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +48,37 @@ public class MostrarDetallesViajeActivity extends AppCompatActivity {
         img_detalles_foto = (ImageView) findViewById(R.id.img_detalles_foto);
         Intent intent = getIntent();
         if (intent != null) {
-            Viaje v = (Viaje) intent.getSerializableExtra(EXTRA_OBJETO_VIAJE);
+            v = (Viaje) intent.getSerializableExtra(EXTRA_OBJETO_VIAJE);
             key = intent.getStringExtra(EXTRA_OBJETO_VIAJE_KEY);
             edt_detalles_idviaje.setText(String.valueOf(v.getIdviaje()));
             edt_detalles_origen.setText(v.getOrigen());
             edt_detalles_destino.setText(v.getDestino());
             edt_detalles_precio.setText(String.valueOf(v.getPrecio()));
-            byte[] fotob = intent.getByteArrayExtra(EXTRA_OBJETO_IMG_VIAJE);
-            if (fotob != null) {
-                Bitmap fotov = bytes_to_bitmap(fotob, Configuracion.ANCHO_IMAGENES_BITMAP, Configuracion.ALTO_IMAGENES_BITMAP);
-                img_detalles_foto.setImageBitmap(fotov);
-            } else {
-                // img_detalles_foto.setImageDrawable(getResources().getDrawable(R.drawable.foto_viaje2));
-                // img_detalles_foto.setImageResource(R.drawable.foto_viaje);
-                // img_detalles_foto.setBackgroundResource(R.drawable.foto_viaje);
+            if (v.getFoto() != null) {
+                new ImagenesFirebase().descargarFoto(new ImagenesFirebase.FotoStatus() {
+                    @Override
+                    public void FotoIsDownload(byte[] bytes) {
+                        if(bytes != null) {
+                            Log.i("firebasedb","foto descargada correctamente");
+                            Bitmap fotob = decodeSampledBitmapFrombyteArray(bytes, Configuracion.ALTO_IMAGENES_BITMAP, Configuracion.ANCHO_IMAGENES_BITMAP);
+                            img_detalles_foto.setImageBitmap(fotob);
+                        }
+                        else{
+                            Log.i("firebasedb","foto no descargada correctamente");
+                        }
+                    }
+                    @Override
+                    public void FotoIsUpload() {
+                    }
+                    @Override
+                    public void FotoIsDelete() {
+                    }
+                },v.getFoto());
+
+            }
+            else{
+                // holder.img_rv_viaje_foto.setImageResource(R.drawable.foto_viaje);
+                // holder.img_rv_viaje_foto.setBackgroundResource(R.drawable.foto_viaje);
             }
         }
 
@@ -89,6 +112,19 @@ public class MostrarDetallesViajeActivity extends AppCompatActivity {
                 finish();
             }
         }, key);
+        new ImagenesFirebase().borrarFoto(new ImagenesFirebase.FotoStatus() {
+            @Override
+            public void FotoIsDownload(byte[] bytes) {
+            }
+            @Override
+            public void FotoIsDelete() {
+            }
+            @Override
+            public void FotoIsUpload() {
+                Toast.makeText(MostrarDetallesViajeActivity.this, "foto eliminada correcto", Toast.LENGTH_LONG).show();
+            }
+        },v.getFoto());
+
     }
     //-----------------------------------------------------------------------------------------------
 
@@ -124,6 +160,11 @@ public class MostrarDetallesViajeActivity extends AppCompatActivity {
         },key,v);
     }
 
+    public void salir(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        FirebaseAuth.getInstance().signOut();
+    }
     //-----------------------------------------------------------------------------------------------
 
 

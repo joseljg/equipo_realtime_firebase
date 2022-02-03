@@ -43,4 +43,15 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_mostrar_titulo"
         app:layout_constraintVertical_bias="0.0" />
 
+    <Button
+        android:id="@+id/bt_salirm"
+        android:layout_width="140dp"
+        android:layout_height="48dp"
+        android:onClick="salir"
+        android:text="@string/salir"
+        app:layout_constraintBottom_toBottomOf="@+id/bt_addviaje"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bt_addviaje"
+        app:layout_constraintTop_toTopOf="@+id/bt_addviaje" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

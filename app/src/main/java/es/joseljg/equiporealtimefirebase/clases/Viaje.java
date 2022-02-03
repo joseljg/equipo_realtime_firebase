@@ -10,7 +10,7 @@ public class Viaje implements Serializable {
     private String origen;
     private String destino;
     private double precio;
-    private Bitmap foto;
+    private String foto;
     //---------------------------------------
 
     public Viaje(String origen, String destino, double precio) {
@@ -36,14 +36,14 @@ public class Viaje implements Serializable {
         this.foto = null;
     }
 
-    public Viaje(String origen, String destino, double precio, Bitmap foto) {
+    public Viaje(String origen, String destino, double precio, String foto) {
         this.idviaje = 0;
         this.origen = origen;
         this.destino = destino;
         this.precio = precio;
         this.foto = foto;
     }
-    public Viaje(int idviaje,String origen, String destino, double precio, Bitmap foto) {
+    public Viaje(int idviaje,String origen, String destino, double precio, String foto) {
         this.idviaje = idviaje;
         this.origen = origen;
         this.destino = destino;
@@ -91,11 +91,11 @@ public class Viaje implements Serializable {
         this.idviaje = idviaje;
     }
 
-    public Bitmap getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(Bitmap foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
     }
 
@@ -111,6 +111,7 @@ public class Viaje implements Serializable {
                 ", origen='" + origen + '\'' +
                 ", destino='" + destino + '\'' +
                 ", precio=" + precio +
+                ", foto='" + foto + '\'' +
                 '}';
     }
 }

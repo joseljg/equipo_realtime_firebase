@@ -11,11 +11,78 @@
         android:id="@+id/bt_mostrar_viaje"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="84dp"
         android:onClick="mostrarViaje"
         android:text="@string/mostrar_viajes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/edt_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="86dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginEnd="115dp"
+        android:autofillHints="no"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edt_clave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:autofillHints="no"
+        android:ems="10"
+        android:hint="@string/clave"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/edt_email"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/edt_email"
+        app:layout_constraintTop_toBottomOf="@+id/edt_email" />
+
+    <Button
+        android:id="@+id/bt_loguearse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="54dp"
+        android:onClick="loguearse"
+        android:text="@string/loguearse"
+        app:layout_constraintEnd_toStartOf="@+id/bt_registrarse"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_clave" />
+
+    <Button
+        android:id="@+id/bt_registrarse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:onClick="crear_usuario"
+        android:text="@string/registrarse"
+        app:layout_constraintBottom_toBottomOf="@+id/bt_loguearse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bt_loguearse"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/bt_salir"
+        android:layout_width="123dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="60dp"
+        android:text="Salir"
+        android:onClick="salir"
+        app:layout_constraintEnd_toEndOf="@+id/bt_loguearse"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/bt_loguearse"
+        app:layout_constraintTop_toBottomOf="@+id/bt_loguearse" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
